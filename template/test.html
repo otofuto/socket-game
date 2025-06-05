@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>テスト</title>
+        <style>
+            #power {
+                position: absolute;
+            }
+
+            main {
+                display: block;
+                position: relative;
+                margin: 120px auto;
+                width: 65mm;
+                height: 45mm;
+                background-color: black;
+            }
+
+            #led_l, #led_r {
+                display: block;
+                position: absolute;
+                width: 5mm;
+                height: 3mm;
+                border: solid 1px black;
+                background-color: silver;
+                top: -3mm;
+                left: 20mm;
+            }
+
+            #led_r {
+                left: 40mm;
+            }
+
+            #button_l, #button_r {
+                display: inline-block;
+                position: relative;
+                border: solid 2.5mm whitesmoke;
+                background-color: black;
+                color: white;
+                width: 13mm;
+                height: 13mm;
+                border-radius: 50%;
+                box-sizing: border-box;
+                margin-top: 6mm;
+            }
+
+            #button_l {
+                margin-left: 5mm;
+            }
+
+            #button_r {
+                margin-left: 28mm;
+            }
+
+            #mouth:before {
+                content: '';
+                display: block;
+                width: 100%;
+                height: 11mm;
+                background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMCAxMCIgd2lkdGg9IjMwMCIgaGVpZ2h0PSIxMDAiPgogICAgPHBhdGggZD0iTSAyOCAzQSAyMCAyMCAwIDAgMSAyIDMiIGZpbGw9Im5vbmUiIHN0cm9rZT0id2hpdGUiIC8+CiAgICA8cGF0aCBkPSJNIDMgMiBsIC0xLjcgMi4yIiBmaWxsPSJub25lIiBzdHJva2U9IndoaXRlIiAvPgogICAgPHBhdGggZD0iTSAyNyAyIGwgMS43IDIuMiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgLz4KPC9zdmc+");
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: center;
+                margin-top: 9mm;
+            }
+        </style>
+    </head>
+    <body>
+        <input type="button" value="電源を入れる" id="power" onclick="wsConnect(),startAnimation()">
+        <main>
+            <div>
+                <span id="led_l"></span>
+                <span id="led_r"></span>
+            </div>
+            <div>
+                <button id="button_l" onclick="btn_l_click()">D</button>
+                <button id="button_r" onclick="btn_r_click()">K</button>
+            </div>
+            <div id="mouth"></div>
+        </main>
+        <script>
+            let startTime = null;
+            let currentLighting = null;
+
+            let ws = null;
+            function wsConnect() {
+                document.getElementById('power').style.display = 'none';
+                ws = new WebSocket(location.origin.replace('http', 'ws') + '/ws/ws');
+
+                ws.onmessage = (event) => {
+                    const data = JSON.parse(event.data);
+                    if (data.message == "pico") {
+                        ws.send(`{"message":"running"}`);
+                    } else if (data.message == "led_l") {
+                        led_l_on();
+                        currentLighting = 'l';
+                        startTime = new Date() - 0;
+                    } else if (data.message == "led_r") {
+                        led_r_on();
+                        currentLighting = 'r';
+                        startTime = new Date() - 0;
+                    }
+                };
+                ws.onopen = () => {
+                    ws.send(`{"message":"connected"}`);
+                };
+                ws.onclose = () => {
+                    wsConnect();
+                };
+            }
+
+            function btn_l_click() {
+                if (currentLighting == 'r') {
+                    ws.send('{"message":"miss"}');
+                    return;
+                }
+                if (currentLighting != 'l') return;
+                let time = new Date() - startTime;
+                ws.send(`{"message":"${time}"}`);
+                led_l_off();
+                currentLighting = null;
+            }
+
+            function btn_r_click() {
+                if (currentLighting == 'l') {
+                    ws.send('{"message":"miss"}');
+                    return;
+                }
+                if (currentLighting != 'r') return;
+                let time = new Date() - startTime;
+                ws.send(`{"message":"${time}"}`);
+                led_r_off();
+                currentLighting = null;
+            }
+
+            document.body.addEventListener('keydown', e => {
+                if (e.code == 'KeyK') {
+                    btn_r_click();
+                } else if (e.code == 'KeyD') {
+                    btn_l_click();
+                }
+            });
+
+            function led_r_on() {
+                document.getElementById('led_r').style.backgroundColor = 'orange';
+            }
+
+            function led_r_off() {
+                document.getElementById('led_r').style.backgroundColor = 'silver';
+            }
+
+            function led_l_on() {
+                document.getElementById('led_l').style.backgroundColor = 'orange';
+            }
+
+            function led_l_off() {
+                document.getElementById('led_l').style.backgroundColor = 'silver';
+            }
+
+            function startAnimation() {
+                let i = 0;
+                let si = setInterval(() => {
+                    i++;
+                    if (i == 1) {
+                        led_r_on();
+                    } else if (i == 2) {
+                        led_r_off();
+                    } else if (i == 5) {
+                        led_l_on();
+                    } else if (i == 6) {
+                        led_l_off();
+                        clearInterval(si);
+                    }
+                }, 100);
+            }
+        </script>
+    </body>
+</html>

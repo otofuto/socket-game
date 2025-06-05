@@ -1,0 +1,22 @@
+{
+    "wifi": {
+      "ssid": "Buffalo-2G-16F0",
+      "password": "i3n7wuvewa5br"
+    },
+    "websocket": {
+      "host": "mb2022.local",
+      "port": 3033,
+      "path": "/ws/ws"
+    },
+    "gpio": {
+      "led_r_pin": 6,
+      "led_l_pin": 11,
+      "button_r_pin": 28,
+      "button_l_pin": 27
+    },
+    "settings": {
+      "timeout_ms": 10000,
+      "check_interval_ms": 5
+    }
+  }
+  
