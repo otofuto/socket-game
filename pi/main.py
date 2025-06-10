@@ -75,6 +75,7 @@ button_l_pressed = False
 last_button_r_state = 1  # 前回のボタン状態（1=押されていない）
 last_button_l_state = 1
 expected_button = None  # 押すべきボタン（"right", "left", None）
+both_buttons_pressed = False
 
 def setup_fade_led():
     """右LEDのPWM制御を初期化"""
@@ -332,11 +333,19 @@ def control_led(command):
 
 def check_button_and_timeout():
     """ボタン押下チェックとタイムアウト処理"""
-    global measuring, start_time, button_r_pressed, last_button_r_state, button_l_pressed, last_button_l_state, expected_button
+    global measuring, start_time, button_r_pressed, last_button_r_state, button_l_pressed, last_button_l_state, expected_button, both_buttons_pressed
     
     current_time = time.ticks_ms()
     current_button_r_state = button_r_pin.value()
     current_button_l_state = button_l_pin.value()
+    
+    if current_button_r_state == 0 and current_button_l_state == 0:
+        if not both_buttons_pressed:
+            both_buttons_pressed = True
+            print("両ボタン同時押し検出")
+            return "start"
+    else:
+        both_buttons_pressed = False
     
     # 計測中の場合
     if measuring:
@@ -355,6 +364,7 @@ def check_button_and_timeout():
                 return elapsed_time
             else:
                 # 間違い（左ボタンを押すべきだった） - LEDはそのままでmissのみ送信
+                button_r_pressed = False
                 print(f"右ボタン押下検出（間違い）！ - 経過時間: {elapsed_time}ms")
                 return "miss"
         
@@ -375,6 +385,7 @@ def check_button_and_timeout():
                 return elapsed_time
             else:
                 # 間違い（右ボタンを押すべきだった） - LEDはそのままでmissのみ送信
+                button_l_pressed = False
                 print(f"左ボタン押下検出（間違い）！ - 経過時間: {elapsed_time}ms")
                 return "miss"
         
@@ -426,7 +437,6 @@ def main():
     # 起動時LED点滅（右→左）
     led_r_pin.off()
     led_l_pin.off()
-    time.sleep(0.1)
     led_r_pin.on()
     time.sleep(0.1)
     led_r_pin.off()

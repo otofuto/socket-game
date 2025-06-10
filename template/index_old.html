@@ -17,7 +17,7 @@
                 width: 100dvw;
                 height: 100dvh;
                 background-color: white;
-                background-image: url('/st/kidsroom2.png');
+                background-image: url('/st/kidsroom.png');
                 background-size: cover;
                 background-position: center;
                 overflow: hidden;
@@ -107,6 +107,43 @@
                 content: 'ms';
             }
 
+            #gauge {
+                display: block;
+                position: absolute;
+                left: 0;
+                top: 30px;
+                z-index: 100;
+                width: 100%;
+                text-align: center;
+            }
+
+            #bar {
+                display: block;
+                position: relative;
+                margin: 0 auto;
+                background-color: white;
+                border: solid 4px chocolate;
+                box-shadow: 2px 2px 6px -2px chocolate;
+                border-radius: 25px;
+                width: 800px;
+                max-width: 99%;
+                height: 50px;
+                box-sizing: border-box;
+            }
+
+            #bar>img {
+                height: 42px;
+            }
+
+            #status {
+                display: inline-block;
+                margin-top: 5px;
+                font-size: 24px;
+                color: chocolate;
+                text-shadow: 0 0 5px white;
+                vertical-align: top;
+            }
+
             #miss {
                 display: block;
                 position: absolute;
@@ -151,50 +188,13 @@
                     margin-left: 0px;
                 }
             }
-
-            .biscuit {
-                display: inline-block;
-                background-image: url('/st/biscuit1.png');
-                background-size: contain;
-                background-repeat: no-repeat;
-                background-position: center;
-                position: absolute;
-                width: 200px;
-                height: 138px;
-            }
-
-            #table {
-                display: block;
-                position: absolute;
-                top: calc(62dvh - 138px);
-                left: calc(30dvw - 100px);
-                width: 40dvw;
-                height: 31dvh;
-                background-color: transparent;
-            }
-
-            #counter {
-                display: inline-block;
-                width: max-content;
-                padding: 10px 20px;
-                background-color: bisque;
-                color: chocolate;
-                border-radius: 20px;
-                font-size: 30px;
-                position: absolute;
-                left: 20px;
-                top: 20px;
-            }
-
-            #counter:empty {
-                display: none;
-            }
         </style>
     </head>
     <body>
         <main>
-            <div id="counter"></div>
-            <div id="table"></div>
+            <div id="gauge" style="display: none;">
+                <div id="bar"><img src="/st/lv1.png"><div id="status">ド健全</div></div>
+            </div>
             <div id="msgBox" style="display: none;"></div>
             <div id="msBox" style="top: 100%;"><span id="ms"></span></div>
             <div id="miss" style="display: none;">
@@ -206,42 +206,43 @@
         </main>
         <script>
             const urls = [
-                '/st/images/erotic_cosplayer_20250524_034s.jpg',
-                '/st/images/erotic_cosplayer_20250524_036s.jpg',
-                '/st/images/erotic_cosplayer_20250524_008s.jpg',
-                '/st/images/erotic_cosplayer_20250524_010s.jpg',
-                '/st/images/erotic_cosplayer_20250524_013s.jpg',
-                '/st/images/erotic_cosplayer_20250524_065s.jpg',
-                '/st/images/erotic_cosplayer_20250524_067s.jpg',
-                '/st/images/erotic_cosplayer_20250524_070s.jpg',
-                '/st/images/erotic_cosplayer_20250524_086s.jpg',
-                '/st/images/erotic_cosplayer_20250524_032s.jpg',
-                '/st/images/erotic_cosplayer_20250524_044s.jpg',
-                '/st/images/erotic_cosplayer_20250524_088s.jpg',
-                '/st/images/erotic_cosplayer_20250524_095s.jpg',
-                '/st/images/erotic_cosplayer_20250524_014s.jpg',
-                '/st/images/erotic_cosplayer_20250524_054s.jpg',
                 '/st/images/erotic_cosplayer_20250510_105s.jpg',
                 '/st/images/erotic_cosplayer_20250524_002s.jpg',
                 '/st/images/erotic_cosplayer_20250524_003s.jpg',
                 '/st/images/erotic_cosplayer_20250524_005s.jpg',
                 '/st/images/erotic_cosplayer_20250524_007s.jpg',
+                '/st/images/erotic_cosplayer_20250524_008s.jpg',
+                '/st/images/erotic_cosplayer_20250524_010s.jpg',
+                '/st/images/erotic_cosplayer_20250524_013s.jpg',
+                '/st/images/erotic_cosplayer_20250524_014s.jpg',
+                '/st/images/erotic_cosplayer_20250524_032s.jpg',
+                '/st/images/erotic_cosplayer_20250524_034s.jpg',
+                '/st/images/erotic_cosplayer_20250524_036s.jpg',
+                '/st/images/erotic_cosplayer_20250524_037s.jpg',
+                '/st/images/erotic_cosplayer_20250524_039s.jpg',
+                '/st/images/erotic_cosplayer_20250524_040s.jpg',
+                '/st/images/erotic_cosplayer_20250524_044s.jpg',
+                '/st/images/erotic_cosplayer_20250524_054s.jpg',
                 '/st/images/erotic_cosplayer_20250524_056s.jpg',
                 '/st/images/erotic_cosplayer_20250524_058s.jpg',
                 '/st/images/erotic_cosplayer_20250524_060s.jpg',
                 '/st/images/erotic_cosplayer_20250524_063s.jpg',
-                '/st/images/erotic_cosplayer_20250524_037s.jpg',
-                '/st/images/erotic_cosplayer_20250524_039s.jpg',
-                '/st/images/erotic_cosplayer_20250524_040s.jpg',
+                '/st/images/erotic_cosplayer_20250524_065s.jpg',
+                '/st/images/erotic_cosplayer_20250524_067s.jpg',
+                '/st/images/erotic_cosplayer_20250524_070s.jpg',
+                '/st/images/erotic_cosplayer_20250524_086s.jpg',
+                '/st/images/erotic_cosplayer_20250524_088s.jpg',
+                '/st/images/erotic_cosplayer_20250524_095s.jpg',
                 '/st/images/erotic_cosplayer_20250524_096s.jpg',
                 '/st/images/erotic_cosplayer_20250524_108s.jpg',
             ];
 
             let urlIndex = 0;
 
-            let biscuitCount = 40;
+            let sumTime = 0;
             let okCount = 0;
             let ngCount = 0;
+            const maxTime = 4000;
             const clearCount = 10;
             const penalty = 100;
 
@@ -253,10 +254,7 @@
 
                 ws.onmessage = (event) => {
                     const data = JSON.parse(event.data);
-                    if (data.message == "start") {
-                        if (document.getElementById('startButton').innerText == 'ゲームスタート！')
-                            gameStart();
-                    } else if (data.message == "connected") {
+                    if (data.message == "connected") {
                         document.getElementById('startButton').innerText = 'ゲームスタート！';
                         document.getElementById('startButton').setAttribute('onclick', 'gameStart()');
                     } else if (data.message == "running") {
@@ -264,14 +262,14 @@
                         document.getElementById('startButton').setAttribute('onclick', 'gameStart()');
                     } else if (data.message == "miss") {
                         miss();
-                        biscuitCount--;
-                        updateTable();
+                        sumTime += penalty;
+                        updateGauge();
                         ngCount++;
                         document.title = `OK: ${okCount} | NG: ${ngCount}`;
                     } else if (data.message - 0 > 0) {
                         ms(data.message);
-                        biscuitCount -= ~~(~~data.message / 100);
-                        updateTable();
+                        sumTime += ~~data.message;
+                        updateGauge();
                         okCount++;
                         document.title = `OK: ${okCount} | NG: ${ngCount}`;
                         clientWait = false;
@@ -280,7 +278,7 @@
                         clearTimeout(st);
                         if (clearCount <= okCount && gameSi != null) {
                             clearInterval(gameSi);
-                            msg(`やったー！\n${biscuitCount}枚のビスケットを守れたね！`);
+                            msg('やったー！\n性犯罪者回避だね！');
                         }
                     }
                 };
@@ -340,9 +338,9 @@
 
             async function gameStart() {
                 document.getElementById('startButton').remove();
-                updateTable();
-                setBiscuit();
-                await msg("エロい大人からビスケットを守れ！");
+                document.getElementById('gauge').removeAttribute('style');
+                await msg("エロい大人から子供の目を守れ！");
+                console.log('animation end');
                 let waitCount = 20;
                 gameSi = setInterval(() => {
                     if (waitCount <= 0) {
@@ -369,21 +367,6 @@
                 }, 100);
             }
 
-            function setBiscuit() {
-                const tbl = document.getElementById('table');
-                for (let i = 0; i < biscuitCount; i++) {
-                    const bis = document.createElement('div');
-                    bis.setAttribute('class', 'biscuit');
-                    if (Math.random() < 0.5) bis.style.backgroundImage = `url('/st/biscuit2.png')`;
-                    tbl.appendChild(bis);
-
-                    const dan = ~~(i / 8);
-                    const left = i % 8;
-                    bis.style.left = (12.5 * left) + '%';
-                    bis.style.top = `calc(100% - ${dan * 80}px)`;
-                }
-            }
-
             function viewImageR() {
                 document.getElementById('imageR').style.backgroundImage = `url('${urls[urlIndex]}')`;
                 document.getElementById('imageR').style.right = '0%';
@@ -398,22 +381,42 @@
                 if (urls.length <= urlIndex) urlIndex = 0;
             }
 
-            function updateTable() {
-                if (biscuitCount <= 0) biscuitCount = 0;
-                let biscuits = document.querySelectorAll('.biscuit');
-                let currentCount = biscuits.length;
-                let diff = currentCount - biscuitCount;
-                for (let i = 1; i <= diff; i++) {
-                    biscuits[currentCount - i].remove();
+            const statusIcon = document.querySelector('#bar>img');
+            function updateGauge() {
+                let per = sumTime / maxTime * 100;
+                let color = 'pink';
+
+                const status = document.getElementById('status');
+                if (per < 20) {
+                    status.innerText = '健全';
+                    statusIcon.src = '/st/lv1.png';
+                    color = 'aquamarine';
+                } else if (per < 40) {
+                    status.innerText = 'マセガキ';
+                    statusIcon.src = '/st/lv2.png';
+                    color = 'pink';
+                } else if (per < 60) {
+                    status.innerText = 'スケベ';
+                    statusIcon.src = '/st/lv3.png';
+                    color = 'deeppink';
+                } else if (per < 80) {
+                    status.innerText = 'ド変態';
+                    statusIcon.src = '/st/lv4.png';
+                    color = 'mediumpurple';
+                } else {
+                    status.innerText = '性犯罪者予備軍';
+                    statusIcon.src = '/st/lv5.png';
+                    color = 'indianred';
                 }
 
-                if (biscuitCount == 0) {
+                if (per >= 100) {
+                    status.innerText = '救いようのない性犯罪者';
+                    color = 'dimgray';
                     clearInterval(gameSi);
                     gameSi = null;
-                    msg('ビスケットを全部取られてしまった...');
+                    msg('あーあ、あなたの子供は救いようのない性犯罪者になっちゃったね。');
                 }
-
-                document.getElementById('counter').innerText = '残り ' + biscuitCount + '枚';
+                document.getElementById('bar').style.background = `linear-gradient(90deg, ${color} 0% ${per}%, white ${per}% 100%)`;
             }
 
             function miss() {

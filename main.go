@@ -51,6 +51,8 @@ func IndexHandle(w http.ResponseWriter, r *http.Request) {
 		filename := "index"
 		if r.URL.Path == "/test" {
 			filename = "test"
+		} else if r.URL.Path == "/old" {
+			filename = "index_old"
 		}
 		if err := template.Must(template.ParseFiles("template/"+filename+".html")).Execute(w, nil); err != nil {
 			log.Println(err)
